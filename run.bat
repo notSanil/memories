@@ -1,1 +1,1 @@
-flask --app memories --debug run
+flask --app memories/backend --debug run
