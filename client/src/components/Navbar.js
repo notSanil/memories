@@ -20,16 +20,6 @@ export default function Navbar(props) {
 
             <li className="nav-item">
                 {/* <a className="nav-link" href="/AboutUs">About Us</a> */}
-                <Link className='nav-link' to='/AboutUs'>Gallery</Link>
-            </li>
-
-            <li className="nav-item">
-                {/* <a className="nav-link" href="/AboutUs">About Us</a> */}
-                <Link className='nav-link' to='/AboutUs'>Upload</Link>
-            </li>
-
-            <li className="nav-item">
-                {/* <a className="nav-link" href="/AboutUs">About Us</a> */}
                 <Link className='nav-link' to='/AboutUs'>About Us</Link>
             </li>
 
@@ -40,6 +30,8 @@ export default function Navbar(props) {
             <input className="form-check-input" onClick={props.toggleMode} type="checkbox" id="flexSwitchCheckDefault"/>
             <label className="form-check-label mx-2" htmlFor="flexSwitchCheckDefault">Dark Mode</label>
         </div>
+
+        <Link className='mx-3' onClick={props.logout}>Logout</Link>
     </nav>
   )
 }

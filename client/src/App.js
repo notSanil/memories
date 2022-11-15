@@ -3,6 +3,8 @@ import './App.css';
 import Navbar from './components/Navbar';
 import AboutUs from './components/AboutUs';
 import Home from './components/Home';
+import Login from './components/Login'
+import Landing from './components/Landing';
 
 import {
   BrowserRouter as Router,
@@ -11,7 +13,14 @@ import {
 } from "react-router-dom";
 
 
+
 function App() {
+  const adminUser = {
+    username: "admin@admin.com",
+    password: "admin123"
+  }
+  const [user, setUser] = useState({username:""});
+  const [error, setError] = useState("");
   const [mode, setMode] = useState('light');
 
   const toggleMode = () => {
@@ -25,17 +34,45 @@ function App() {
     }
   }
 
+  const login = details => {
+    console.log(details);
+    
+    if (details.username === adminUser.username && details.password === adminUser.password) {
+      console.log("Logged in");
+      setUser({
+        username: details.username
+      });
+    } else {
+      console.log("Incorrect details");
+      setError("Details do not match!")
+    }
+  }
+
+  const logout = () => {
+    console.log("Logout");
+    setUser({username:""});
+  }
+
 
   return (
     <div>
-      <Router>
-        <Navbar mode={mode} toggleMode={toggleMode}/>
+      {(user.username !== "") ? (
+        <Router>
+          <Navbar mode={mode} toggleMode={toggleMode} logout={logout}/> 
 
-        <Routes>
-          <Route exact path='/' element={<Home/>} />
-          <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
-        </Routes>
-      </Router>
+          <Routes>
+            <Route exact path='/' element={<Home/>} />
+            <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
+          </Routes>
+        </Router> 
+      ):(
+        <Router>
+          <Routes>
+            <Route exact path='/' element={<Landing/>} />
+            <Route exact path='/LoginPage' element={<Login login={login} error={error}/>}/>
+          </Routes>
+        </Router>
+      )}
       
     </div>
     
