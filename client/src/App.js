@@ -5,6 +5,8 @@ import AboutUs from './components/AboutUs';
 import Home from './components/Home';
 import Login from './components/Login'
 import Landing from './components/Landing';
+import Register from './components/Register';
+
 
 import {
   BrowserRouter as Router,
@@ -70,6 +72,7 @@ function App() {
           <Routes>
             <Route exact path='/' element={<Landing/>} />
             <Route exact path='/LoginPage' element={<Login login={login} error={error}/>}/>
+            <Route exact path='/RegisterPage' element={<Register error={error}/>}/>
           </Routes>
         </Router>
       )}

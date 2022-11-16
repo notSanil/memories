@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import React from 'react';
 
-export default function Login(props) {
+export default function Register(props) {
     const [inputs, setInputs] = useState({});
 
     const handleChange = (event) => {
@@ -13,9 +13,8 @@ export default function Login(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         // console.log(inputs)
-        props.login(inputs)
 
-      fetch('http://localhost:5000/auth/login', {
+      fetch('http://localhost:5000/auth/register', {
         'method': 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -28,7 +27,7 @@ export default function Login(props) {
 
   return(
     <form>
-      {(props.error !== "")? (<div className='error'>{props.error}</div>) : ""}
+      {/* {(props.error !== "")? (<div className='error'>{props.error}</div>) : ""} */}
 
       <label> Enter username:
         <input 
@@ -44,6 +43,15 @@ export default function Login(props) {
             type="password" 
             name="password" 
             value={inputs.password || ""} 
+            onChange={handleChange}
+        />
+      </label>
+
+      <label> Enter name:
+        <input 
+            type="text" 
+            name="name" 
+            value={inputs.name || ""} 
             onChange={handleChange}
         />
       </label>

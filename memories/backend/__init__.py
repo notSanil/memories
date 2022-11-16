@@ -26,15 +26,12 @@ def create_app(test_config=None):
     def hello():
         return "Hello World"
 
-
-    @app.route('/test', methods=["POST"], strict_slashes=False)
-    def receiveData():
-        print(request.json)
-        return {"value":"LoL"}
-
     from . import database
     database.init_app(app)
 
     cors.init_app(app)
+
+    from . import auth
+    app.register_blueprint(auth.bp)
 
     return app

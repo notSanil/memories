@@ -3,7 +3,7 @@ import mysql.connector
 import click
 
 
-def get_db():
+def _get_db():
     if 'conn' not in g:
         g.conn = mysql.connector.connect(
             host=current_app.config['DATABASE_HOST'],
@@ -15,6 +15,20 @@ def get_db():
         g.db = g.conn.cursor()
     return g.db
 
+
+def get_db():
+    if 'conn' not in g:
+        g.conn = mysql.connector.connect(
+            host=current_app.config['DATABASE_HOST'],
+            user=current_app.config['DATABASE_USER'],
+            password=current_app.config['DATABASE_PASSWORD'],
+            database=current_app.config["DATABASE_NAME"]
+        )
+
+    if 'db' not in g:
+        g.db = g.conn.cursor()
+    return g.db, g.conn
+
 def close_db(e=None):
     db = g.get('db', None)
 
@@ -23,7 +37,7 @@ def close_db(e=None):
 
 
 def init_db():
-    db = get_db()
+    db = _get_db()
 
     db.execute("DROP DATABASE {}".format(current_app.config["DATABASE_NAME"]))
     db.execute("CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(current_app.config["DATABASE_NAME"]))
