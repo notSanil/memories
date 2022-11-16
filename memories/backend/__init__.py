@@ -1,8 +1,10 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify 
+from flask_cors import CORS
 
 
+cors = CORS()
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
@@ -24,7 +26,15 @@ def create_app(test_config=None):
     def hello():
         return "Hello World"
 
+
+    @app.route('/test', methods=["POST"], strict_slashes=False)
+    def receiveData():
+        print(request.json)
+        return {"value":"LoL"}
+
     from . import database
     database.init_app(app)
+
+    cors.init_app(app)
 
     return app

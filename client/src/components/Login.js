@@ -14,6 +14,16 @@ export default function Login(props) {
         event.preventDefault();
         // console.log(inputs)
         props.login(inputs)
+
+      fetch('http://localhost:5000/test', {
+        'method': 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(inputs)
+      })
+        .then(response => response.json())
+        .catch(error => console.log(error))
     }
 
   return(
