@@ -13,6 +13,6 @@ CREATE TABLE users (
 CREATE TABLE images (
     id INT PRIMARY KEY AUTO_INCREMENT,
     ownerID INT NOT NULL,
-    data LONGBLOB NOT NULL,
+    fileName VARCHAR(50) NOT NULL,
     FOREIGN KEY (ownerID) REFERENCES users (id)
 );
