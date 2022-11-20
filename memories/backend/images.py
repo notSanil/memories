@@ -1,6 +1,5 @@
 from flask import Blueprint, request, current_app, send_from_directory
 from backend.database import get_db
-import io
 
 bp = Blueprint("images", __name__, url_prefix="/")
 
