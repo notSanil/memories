@@ -63,7 +63,7 @@ function App() {
           <Navbar mode={mode} toggleMode={toggleMode} logout={logout}/> 
 
           <Routes>
-            <Route exact path='/' element={<Home/>} />
+            <Route exact path='/' element={<Home mode={mode}/>} />
             <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
           </Routes>
         </Router> 
