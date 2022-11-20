@@ -1,8 +1,34 @@
 import React from 'react'
+
+import { useState } from 'react';    
+
 import quote from './memories.jpg'
 import quoteNeg from './memoriesNeg.jpg'
 
 export default function Home(props) {
+  const [file, setFile] = useState();
+
+  const handleSubmit = (e) => {
+    const formData  = new FormData();
+
+    formData.append("id", 3);
+    formData.append("file", file)
+
+    e.preventDefault()
+    fetch('http://localhost:5000/uploadimage', {
+        'method': 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .catch(error => console.log(error))
+
+  }
+
+  const handleChange = (event) => {
+    setFile(event.target.files[0])
+  }
+
+
   return (
     <div>
       <div className={`text-${props.mode==="light"? "dark" : "light"}`} style={{position:'absolute'}}>
@@ -16,5 +42,6 @@ export default function Home(props) {
       </div>
       <img src={props.mode==="light"? quoteNeg:quote} alt="quote" style={{width:"600px", marginLeft:'800px', position:"absolute"}}/>
     </div>
+    
   )
 }

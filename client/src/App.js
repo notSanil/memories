@@ -6,6 +6,8 @@ import Home from './components/Home';
 import Login from './components/Login'
 import Landing from './components/Landing';
 import Register from './components/Register';
+import Image from './components/Image';
+
 
 
 import {
@@ -73,6 +75,8 @@ function App() {
             <Route exact path='/' element={<Landing/>} />
             <Route exact path='/LoginPage' element={<Login login={login} error={error}/>}/>
             <Route exact path='/RegisterPage' element={<Register error={error}/>}/>
+            <Route exact path='/Home' element={<Home/>}/>
+            <Route exact path='/Image' element={<Image/>}/>            
           </Routes>
         </Router>
       )}

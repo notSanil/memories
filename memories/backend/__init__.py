@@ -10,6 +10,7 @@ def create_app(test_config=None):
 
     app.config.from_mapping(
         SECRET_KEY='dev',
+        UPLOADS_PATH=app.instance_path + "/uploads/"
     )
 
     if test_config is None:
@@ -19,6 +20,11 @@ def create_app(test_config=None):
 
     try:
         os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    try:
+        os.makedirs(app.instance_path + "/uploads")
     except OSError:
         pass
 
@@ -33,5 +39,8 @@ def create_app(test_config=None):
 
     from . import auth
     app.register_blueprint(auth.bp)
+
+    from . import images
+    app.register_blueprint(images.bp)
 
     return app
