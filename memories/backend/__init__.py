@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, jsonify 
+from flask import Flask
 from flask_cors import CORS
 
 
@@ -27,10 +27,6 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path + "/uploads")
     except OSError:
         pass
-
-    @app.route('/hello')
-    def hello():
-        return "Hello World"
 
     from . import database
     database.init_app(app)

@@ -14,5 +14,6 @@ CREATE TABLE images (
     id INT PRIMARY KEY AUTO_INCREMENT,
     ownerID INT NOT NULL,
     fileName VARCHAR(50) NOT NULL,
+    caption VARCHAR(300) NOT NULL DEFAULT ' ',
     FOREIGN KEY (ownerID) REFERENCES users (id)
 );
