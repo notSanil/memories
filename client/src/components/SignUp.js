@@ -2,7 +2,7 @@ import { useState } from 'react';
 import React from 'react';
 import background from './loginBack.jpg'
 
-export default function Login(props) {
+export default function SignUp(props) {
     const [inputs, setInputs] = useState({});
 
     const handleChange = (event) => {
@@ -13,24 +13,14 @@ export default function Login(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // console.log(inputs)
-        props.login(inputs)
-
-      fetch('http://localhost:5000/auth/login', {
-        'method': 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(inputs)
-      })
-        .then(response => response.json())
-        .catch(error => console.log(error))
+        props.signup(inputs)
     }
 
-  return(
+
+  return (
     <div className='text-dark' style={{textAlign:"center", flexDirection:"column", alignItems:"center", justifyContent: "center", display: "flex", backgroundImage:`url(${background})`, padding:"120px 0 90px 0", height:"100vh"}}>
       
-      <h1 style={{fontFamily:"serif"}}>Enter credentials to login!</h1>
+      <h1 style={{fontFamily:"serif"}}>Enter details to SignUp!</h1>
 
       <form style={{display:"flex", flexDirection:"column"}}>
         {(props.error !== "")? (<div className='error' style={{color:"red"}}>{props.error}</div>) : ""}
@@ -44,7 +34,7 @@ export default function Login(props) {
           />
         </label>
 
-        <label style={{margin:"0 0 30px 0", fontWeight:"bold"}}> Enter password:
+        <label style={{margin:"10px 0 30px 0", fontWeight:"bold"}}> Enter password:
           <input style={{background:"transparent"}}
               type="password" 
               name="password" 
@@ -53,13 +43,19 @@ export default function Login(props) {
           />
         </label>
 
+        <label style={{margin:"0 0 30px 0", fontWeight:"bold"}}> Confirm password:
+          <input style={{background:"transparent"}}
+              type="password" 
+              name="cpassword" 
+              value={inputs.cpassword || ""} 
+              onChange={handleChange}
+          />
+        </label>
+
         <div>
-          <button className='btn btn-outline-dark' type="submit" onClick={handleSubmit}>Login</button>
+          <button className='btn btn-outline-dark' type="submit" onClick={handleSubmit}>SignUp</button>
         </div>
       </form>
-
-      <p style={{marginTop:"20px"}}>Register new user? <a href="/SignUp" style={{color:"black"}}>SignUp</a></p>
     </div>
-    
   )
 }
