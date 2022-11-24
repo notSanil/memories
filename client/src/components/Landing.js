@@ -14,7 +14,7 @@ export default function Landing() {
             <h4 style={{position:"absolute", marginTop:"400px", fontFamily:"serif", fontWeight:"bold"}}>
                 Get auto-generated captions for efficient searching.
             </h4>
-            <a class="btn btn-primary bg-dark" href="/LoginPage" role="button" style={{height:"40px", marginTop:"500px", border:"0"}}>Login / SignUp</a>
+            <a className="btn btn-primary bg-dark" href="/LoginPage" role="button" style={{height:"40px", marginTop:"500px", border:"0"}}>Login / SignUp</a>
         </div>
     </div>
   )

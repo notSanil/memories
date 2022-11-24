@@ -8,15 +8,14 @@ import Landing from './components/Landing';
 import Register from './components/Register';
 import Image from './components/Image';
 import Upload from './components/Upload';
-
-
+import Gallery from './components/Gallery';
+import SignUp from './components/SignUp';
 
 import {
   BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
-
 
 
 function App() {
@@ -53,6 +52,18 @@ function App() {
     }
   }
 
+  const signup = details => {
+    console.log(details)
+
+    if (details.password===details.cpassword) {
+      setUser({
+        username: details.username
+      });
+    } else {
+      setError("Passwords do not match!")
+    }
+  }
+
   const logout = () => {
     console.log("Logout");
     setUser({username:""});
@@ -68,6 +79,7 @@ function App() {
           <Routes>
             <Route exact path='/' element={<Home mode={mode}/>} />
             <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
+            <Route exact path='/Gallery' element={<Gallery/>}/> 
           </Routes>
         </Router> 
       ):(
@@ -78,7 +90,8 @@ function App() {
             <Route exact path='/RegisterPage' element={<Register error={error}/>}/>
             <Route exact path='/Home' element={<Home/>}/>
             <Route exact path='/Image' element={<Image/>}/>
-            <Route exact path='/Upload' element={<Upload/>}/>        
+            <Route exact path='/Upload' element={<Upload/>}/>
+            <Route exact path='/SignUp' element={<SignUp signup={signup} error={error}/>}/>
           </Routes>
         </Router>
       )}
