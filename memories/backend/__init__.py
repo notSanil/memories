@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 
 
-cors = CORS()
+cors = CORS(supports_credentials=True)
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
@@ -12,6 +12,9 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         UPLOADS_PATH=app.instance_path + "/uploads/"
     )
+
+    app.config["SESSION_COOKIE_SAMESITE"] = "None"
+    app.config["SESSION_COOKIE_SECURE"] = True
 
     if test_config is None:
         app.config.from_pyfile('config.py')

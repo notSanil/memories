@@ -14,12 +14,14 @@ export default function Register(props) {
         event.preventDefault();
         // console.log(inputs)
 
-      fetch('http://localhost:5000/auth/register', {
+      fetch('http://127.0.0.1:5000/auth/register', {
         'method': 'POST',
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(inputs)
+        body: JSON.stringify(inputs),
+        mode: 'cors',
       })
         .then(response => response.json())
         .catch(error => console.log(error))

@@ -18,6 +18,7 @@ export default function Login(props) {
 
       fetch('http://localhost:5000/auth/login', {
         'method': 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json'
         },
