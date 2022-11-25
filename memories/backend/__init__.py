@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
+from datetime import timedelta
 
 
 cors = CORS(supports_credentials=True)
@@ -15,6 +16,9 @@ def create_app(test_config=None):
 
     app.config["SESSION_COOKIE_SAMESITE"] = "None"
     app.config["SESSION_COOKIE_SECURE"] = True
+    app.config["JWT_SECRET_KEY"] = 'change_me_later'
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=3)
+
 
     if test_config is None:
         app.config.from_pyfile('config.py')
@@ -38,6 +42,7 @@ def create_app(test_config=None):
 
     from . import auth
     app.register_blueprint(auth.bp)
+    auth.init_app(app)
 
     from . import images
     app.register_blueprint(images.bp)

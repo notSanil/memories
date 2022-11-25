@@ -4,6 +4,7 @@ import background from './loginBack.jpg'
 
 export default function SignUp(props) {
     const [inputs, setInputs] = useState({});
+    const [error, setError] = useState("");
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -13,7 +14,33 @@ export default function SignUp(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.signup(inputs)
+
+        if (inputs.password !== inputs.cpassword) {
+          setError("Passwords don't match");
+          return;
+        }
+
+
+        fetch('http://127.0.0.1:5000/auth/register', {
+        'method': 'POST',
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputs),
+        mode: 'cors',
+      })
+        .then(response => {
+          if(response.status!==200)
+          {
+            throw new Error(response.status)
+          }
+          return response.json()
+        })
+        .then((response)=>{props.setToken(response.access_token)})
+        .catch(error => {
+          setError("Username already exists")
+        })
     }
 
 
@@ -23,7 +50,7 @@ export default function SignUp(props) {
       <h1 style={{fontFamily:"serif"}}>Enter details to SignUp!</h1>
 
       <form style={{display:"flex", flexDirection:"column"}}>
-        {(props.error !== "")? (<div className='error' style={{color:"red"}}>{props.error}</div>) : ""}
+        {(error !== "")? (<div className='error' style={{color:"red"}}>{error}</div>) : ""}
 
         <label style={{margin:"50px 0 20px 0", fontWeight:"bold"}}> Enter username: 
           <input style={{background:"transparent"}}

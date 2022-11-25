@@ -1,65 +1,76 @@
-from flask import Blueprint, request, make_response, jsonify, session
+from flask import Blueprint, request, jsonify
 from backend.database import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
 from mysql.connector.errors import IntegrityError
-from time import time
+from flask_jwt_extended import create_access_token, unset_jwt_cookies, JWTManager
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+jwt = None
+
+def create_token(id: int):
+    access_token = create_access_token(identity=str(id))
+    return access_token
+
+@bp.route("/logout", methods=["POST"])
+def logout():
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
+
 
 @bp.route("/register", methods=("POST", ))
 def register():
     username = request.json["username"]
     password = request.json["password"]
 
-    name = request.json["name"]
-
     db, connection = get_db()
 
     try:
-        db.execute("INSERT INTO users (name, password, username) VALUES (%s, %s, %s)", 
-        (name, generate_password_hash(password), username))
+        db.execute("INSERT INTO users (password, username) VALUES (%s, %s)", 
+        (generate_password_hash(password), username))
     except IntegrityError:
-        print("Username already registered")
+        connection.close()
+        return {"msg": "Username already exists"}, 401
 
     connection.commit()
 
     db.execute("Select id from users where username=%s", (username, ))
     result = db.fetchone()
-    
-    session.clear()
-    session['user_id'] = result[0]
 
-    return {'name':name, 'username':username}
+    token = create_token(result[0])
+
+    return {"access_token": token}
 
 
 @bp.route("/login", methods=["POST"])
 def login():
-    print(session.get("user_id"))
-
     username = request.json["username"]
     password = request.json["password"]
 
     db, conn = get_db()
 
-    db.execute("SELECT id, name, password, username FROM users where username=%s", (username, ))
+    db.execute("SELECT id, password, username FROM users where username=%s", (username, ))
     result = db.fetchone()
 
-    response_result = {}
     id = -1
-
     if result is None:
         id = -1
-
-    if check_password_hash(result[2], password):
-        id = result[0]
-        response_result['name'] = result[1]
-        response_result['username'] = result[3]
     else:
-        id = -1
+        if check_password_hash(result[1], password):
+            id = result[0]
+        else:
+            id = -1
 
+    token = None
     if id != -1:
-        session['user_id'] = id   
+        token = create_token(id)  
+    else:
+        return {'msg': "Login Failed"}, 401
 
-    response = make_response(jsonify(response_result), 200)
+    return {"access_token": token}
 
-    return response
+
+def init_app(app):
+    global jwt
+    jwt = JWTManager(app)

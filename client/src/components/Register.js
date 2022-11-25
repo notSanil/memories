@@ -24,6 +24,7 @@ export default function Register(props) {
         mode: 'cors',
       })
         .then(response => response.json())
+        .then((response)=>{})
         .catch(error => console.log(error))
     }
 
