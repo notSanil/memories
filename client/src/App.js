@@ -66,7 +66,7 @@ function App() {
           <Routes>
             <Route exact path='/' element={<Home mode={mode} token={token}/>} />
             <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
-            <Route exact path='/Gallery' element={<Gallery/>}/> 
+            <Route exact path='/Gallery' element={<Gallery token={token}/>}/> 
           </Routes>
         </Router>
       )}

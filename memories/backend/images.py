@@ -37,13 +37,26 @@ def processFile(owner, file):
     else:
         conn.commit()
 
-@bp.route("/getimage", methods=["GET"])
+@bp.route("/getimage/<int:id>", methods=["GET"])
 @jwt_required()
-def getImage():
+def getImage(id):
     db, conn = get_db()
 
-    db.execute("SELECT ownerID, fileName FROM images WHERE id=%s", (6, ))
+    db.execute("SELECT ownerID, fileName FROM images WHERE id=%s", (id, ))
     data = db.fetchone()
     
     return send_from_directory(current_app.config["UPLOADS_PATH"], data[1] + '.png')
 
+
+@bp.route('/getUserImages', methods=["GET"])
+@jwt_required()
+def getUserImages():
+    current_user = get_jwt_identity()
+
+    db, conn = get_db()
+    db.execute("SELECT id, fileName FROM images WHERE ownerID=%s", [current_user])
+
+    result = db.fetchall()
+    response = [{"id": x[1], 'src':x[0]} for x in result]
+
+    return response
