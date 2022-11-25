@@ -31,7 +31,7 @@ export default function Login(props) {
       })
       .then((response) => {
         props.setToken(response.access_token)
-        console.log(response)
+        window.location.replace('/')
       })
       .catch(error => {
         setError("Wrong username/password")

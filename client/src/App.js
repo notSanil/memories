@@ -64,7 +64,7 @@ function App() {
         <Router>
           <Navbar mode={mode} toggleMode={toggleMode} logout={logout}/> 
           <Routes>
-            <Route exact path='/' element={<Home mode={mode}/>} />
+            <Route exact path='/' element={<Home mode={mode} token={token}/>} />
             <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
             <Route exact path='/Gallery' element={<Gallery/>}/> 
           </Routes>

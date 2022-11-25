@@ -18,7 +18,6 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
-
 @bp.route("/register", methods=("POST", ))
 def register():
     username = request.json["username"]

@@ -37,7 +37,10 @@ export default function SignUp(props) {
           }
           return response.json()
         })
-        .then((response)=>{props.setToken(response.access_token)})
+        .then((response)=>{
+          props.setToken(response.access_token)
+          window.location.replace('/')
+        })
         .catch(error => {
           setError("Username already exists")
         })
