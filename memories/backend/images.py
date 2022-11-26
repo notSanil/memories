@@ -60,3 +60,13 @@ def getUserImages():
     response = [{"id": x[1], 'src':x[0]} for x in result]
 
     return response
+
+@bp.route("/getCaption/<int:id>", methods=["GET"])
+@jwt_required()
+def getCaption(id):
+    db, conn = get_db()
+
+    db.execute("SELECT caption, fileName FROM images WHERE id=%s", (id, ))
+    data = db.fetchone()
+    
+    return {"caption": data[0]}

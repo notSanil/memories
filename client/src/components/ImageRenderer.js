@@ -1,14 +1,20 @@
 import React, { useState, useRef } from 'react';
+import CustomPopup from "./CustomPopup";
 import { useIntersection } from './IntersectionObserver';
 import './imageRenderer.css';
 
-const ImageRenderer = ({ src, width, height, token }) => {
+const ImageRenderer = ({ src, width, height, token}) => {
   const [isInView, setIsInView] = useState(false);
   const [imgData, setData] = useState();
-  const [isOpen, setOpen] = useState(false);
   const imgRef = useRef();
-
+  const [isOpen, setOpen] = useState(false);
+  const [caption, setCaption] = useState("");
   const backendAddress = "http://localhost:5000";
+
+  const handleClick = () => {
+    console.log(src + " Clicked");
+    setOpen(!isOpen);
+  }
 
   useIntersection(imgRef, () => {
     fetch(backendAddress + '/getimage/' + src, {
@@ -23,16 +29,27 @@ const ImageRenderer = ({ src, width, height, token }) => {
         setData(imgURL);
       })
       .catch(error => console.log(error))
-
-
+    
+      fetch(backendAddress + '/getCaption/' + src, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+        .then(response => response.json())
+        .then((json) => {
+          setCaption(json.caption)
+        })
+        .catch(error => console.log(error))
+    
+    
     setIsInView(true);
   });
 
-  const handleClick = function () {
-    setOpen(!isOpen);
+
+  const popupCloseHandler = (e) => {
+    setOpen(e);
   }
-  
-  //TODO: Change this dialog for a better dialog
 
   return (
     <div
@@ -44,27 +61,20 @@ const ImageRenderer = ({ src, width, height, token }) => {
       }}
     >
       {isInView && (
-        <img
+        <img onClick={handleClick}
           className='image'
           src={imgData}
-          onClick={handleClick}
         />
       )}
-      {isOpen && (
-        <dialog
-          className="dialog"
-          style={{ position: 'absolute' }}
-          open
-          onClick={handleClick}
-        >
-          <img
-            className="image"
-            src={imgData}
-            onClick={handleClick}
-            alt="no image"
-          />
-        </dialog>
-        )}
+
+      <CustomPopup
+        onClose={popupCloseHandler}
+        show={isOpen}
+        title=""
+      >
+        <img className="popup-image" src={imgData}/>
+        <p>{caption}</p>
+      </CustomPopup>
     </div>
   );
 };
