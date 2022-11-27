@@ -70,3 +70,17 @@ def getCaption(id):
     data = db.fetchone()
     
     return {"caption": data[0]}
+
+@bp.route("/updateCaption/<int:id>", methods=["POST"])
+@jwt_required()
+def updateCaption(id):
+    db, conn = get_db()
+
+    newCaption = request.json["caption"]
+    db.execute("UPDATE images SET caption=%s WHERE id=%s", [newCaption, id])
+    conn.commit()
+
+    return "Successfuly update caption", 200
+    
+    
+    

@@ -26,7 +26,6 @@ export default function Gallery(props) {
 
   return (
     <div>
-      <h1>Lazy Load Images</h1>
       {loaded ?
       (<section> 
         {imgData.map(data => (
