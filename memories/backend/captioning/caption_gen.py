@@ -43,8 +43,8 @@ def generate_desc(model, tokenizer, photo, max_length):
 			break
 	return in_text
 
-def generate_captions(photo_path):
-	tokenizer, model = load_m()
+async def generate_captions(photo_path):
+	tokenizer, model = await load_m()
 
 	max_length = 34
 	photo = extract_features(photo_path)
@@ -52,7 +52,7 @@ def generate_captions(photo_path):
 	description = description[9:-6]
 	return description
 
-def load_m():
+async def load_m():
 	if 'tokenizer' not in models:
 		models['tokenizer'] = load(open('memories/backend/captioning/tokenizer.pickle', 'rb'))
 		models['model'] = load_model('memories/backend/captioning/model_29.h5')

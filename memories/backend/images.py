@@ -6,6 +6,7 @@ import os
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from backend.face_recognition.recogniser import recognise_faces
 import cv2
+import asyncio
 
 bp = Blueprint("images", __name__, url_prefix="/")
 
@@ -30,15 +31,16 @@ def processFile(owner, file):
 
     db, conn = get_db()
 
-    # caption = generate_captions(filePath)
     try:
         db.execute("INSERT INTO images(ownerID, fileName, caption) VALUES (%s, %s, %s)", 
-             (owner, str(hashedName), "LOL"))
+             (owner, str(hashedName), "Caption not generated"))
     except IntegrityError:
         conn.close()
         os.remove(filePath)
     else:
         conn.commit()
+
+    asyncio.run(captionImage(filePath, str(hashedName)))
 
     db.execute("SELECT id from images where fileName=%s", [str(hashedName)])
     imageID = db.fetchone()[0]
@@ -69,6 +71,15 @@ def processFile(owner, file):
 
         db.execute('INSERT INTO face_images(faceID, imageID) VALUES(%s, %s)', [faceID, imageID])
         conn.commit()
+
+async def captionImage(filePath, fileName):
+    caption = await generate_captions(filePath)
+    print(caption)
+    db, conn = get_db()
+
+    db.execute("UPDATE images SET caption=%s WHERE fileName=%s", (caption, fileName))
+    conn.commit()
+    print("Caption Generated for" + fileName)
 
 
 def createSample(path, dimensions, sampleName):

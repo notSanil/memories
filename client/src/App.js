@@ -21,6 +21,7 @@ function App() {
   const [error, setError] = useState("");
   const [mode, setMode] = useState('light');
   const { token, removeToken, setToken } = useToken();
+  const navigate = useNavigate();
 
   const toggleMode = () => {
     if (mode==="light") {
@@ -33,7 +34,8 @@ function App() {
     }
   }
 
-  const logout = () => {
+  const logout = (e) => {
+    e.preventDefault();
     fetch('http://localhost:5000/auth/logout', {
       'method': 'POST',
       credentials: "include",
@@ -48,7 +50,7 @@ function App() {
       .catch(error => {
         setError("Username already registered")
       })
-      window.location.replace('/')
+      navigate('/')
   }
 
 
