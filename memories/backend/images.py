@@ -80,7 +80,30 @@ def updateCaption(id):
     db.execute("UPDATE images SET caption=%s WHERE id=%s", [newCaption, id])
     conn.commit()
 
-    return "Successfuly update caption", 200
-    
-    
-    
+    return "Successfuly update caption", 200   
+
+@bp.route("/getFaceImages/<int:id>", methods=["GET"])
+@jwt_required()
+def getFaceImages(id):
+    db, conn = get_db()
+
+    db.execute("SELECT imageID FROM face_images WHERE faceID=%s", [id])
+    result = db.fetchall()
+
+    return result
+
+@bp.route("/getUserFaces", methods=["GET"])
+@jwt_required()
+def getUserFaces():
+    db, conn = get_db()
+
+    current_user = get_jwt_identity()
+
+    db.execute("""SELECT face_description.name, user_faces.faceID FROM user_faces 
+        INNER JOIN face_description ON user_faces.faceID=face_description.id 
+        WHERE user_faces.userID=%s""", [current_user])
+    result = db.fetchall()
+
+    print(result)
+
+    return [{"faceID": x[1], "name": x[0]} for x in result]

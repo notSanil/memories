@@ -39,7 +39,7 @@ def close_db(e=None):
 def init_db():
     db = _get_db()
 
-    db.execute("DROP DATABASE {}".format(current_app.config["DATABASE_NAME"]))
+    db.execute("DROP DATABASE IF EXISTS {}".format(current_app.config["DATABASE_NAME"]))
     db.execute("CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(current_app.config["DATABASE_NAME"]))
 
     with current_app.open_resource('schema.sql') as f:

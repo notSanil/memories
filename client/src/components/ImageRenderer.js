@@ -40,12 +40,11 @@ const ImageRenderer = ({ src, width, height, token }) => {
     })
       .then(response => response.json())
       .then((json) => {
-        setCaption(json.caption)
+        setCaption(json.caption);
+        setAltCaption(json.caption);
       })
       .catch(error => console.log(error)
       );
-
-
     setIsInView(true);
   });
 
@@ -68,6 +67,8 @@ const ImageRenderer = ({ src, width, height, token }) => {
       .then(response => response.json())
       .catch(error => console.log(error)
       );
+
+    setOpen(false);
   }
 
   return (

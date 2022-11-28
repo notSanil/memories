@@ -8,6 +8,7 @@ import Landing from './components/Landing';
 import Gallery from './components/Gallery';
 import SignUp from './components/SignUp';
 import useToken from './components/Token';
+import People from './components/People';
 
 import {
   BrowserRouter as Router,
@@ -47,6 +48,7 @@ function App() {
       .catch(error => {
         setError("Username already registered")
       })
+      window.location.replace('/')
   }
 
 
@@ -66,6 +68,7 @@ function App() {
           <Routes>
             <Route exact path='/' element={<Home mode={mode} token={token}/>} />
             <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
+            <Route exact path='/People' element={<People mode={mode} token={token}/>} />
             <Route exact path='/Gallery' element={<Gallery token={token}/>}/> 
           </Routes>
         </Router>
