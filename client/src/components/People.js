@@ -28,6 +28,20 @@ export default function People(props) {
     navigate("/Person", { state: { "id": id } });
   }
 
+  const cardNameChange = (id, newName) => {
+    fetch(backendAddress + '/updateFaceName/' + id, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${props.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({"name": newName})
+    })
+      .then(response => response.json())
+      .catch(error => console.log(error)
+      );
+  }
+
   return (
     <div>
       {loaded ?
@@ -39,6 +53,8 @@ export default function People(props) {
               name={data.name}
               faceID={data.faceID}
               cardClick={cardClick}
+              cardNameChange={cardNameChange}
+              token={props.token}
             />
           ))}
         </div>) : <p> Loading</p>}

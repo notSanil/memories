@@ -157,3 +157,24 @@ def getUserFaces():
     result = db.fetchall()
 
     return [{"faceID": x[1], "name": x[0]} for x in result]
+
+@bp.route("/updateFaceName/<int:id>", methods=["POST"])
+@jwt_required()
+def updateFaceName(id):
+    db, conn = get_db()
+
+    newName = request.json["name"]
+    db.execute("UPDATE face_description SET name=%s WHERE id=%s", [newName, id])
+    conn.commit()
+
+    return "Successfuly updated name", 200
+
+@bp.route("/getFaceThumbnail/<int:id>", methods=["GET"])
+@jwt_required()
+def getFaceThumbnail(id):
+    db, conn = get_db()
+
+    db.execute("SELECT fileName FROM face_description WHERE id=%s", (id, ))
+    data = db.fetchone()
+    
+    return send_from_directory(current_app.config["SAMPLES_PATH"], data[0] + '.png')

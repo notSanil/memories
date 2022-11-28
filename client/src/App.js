@@ -21,7 +21,7 @@ function App() {
   const [error, setError] = useState("");
   const [mode, setMode] = useState('light');
   const { token, removeToken, setToken } = useToken();
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const toggleMode = () => {
     if (mode==="light") {
@@ -50,7 +50,7 @@ function App() {
       .catch(error => {
         setError("Username already registered")
       })
-      navigate('/')
+      //navigate('/')
   }
 
 
