@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
-import AboutUs from './components/AboutUs';
 import Home from './components/Home';
 import Login from './components/Login'
 import Landing from './components/Landing';
@@ -68,7 +67,6 @@ function App() {
           <Navbar mode={mode} toggleMode={toggleMode} logout={logout}/> 
           <Routes>
             <Route exact path='/' element={<Home mode={mode} token={token}/>} />
-            <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
             <Route exact path='/People' element={<People mode={mode} token={token}/>} />
             <Route exact path='/Gallery' element={<Gallery token={token}/>}/> 
             <Route exact path='/Person' element={<PersonPage token={token}/>}/> 
