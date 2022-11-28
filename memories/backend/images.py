@@ -3,7 +3,9 @@ from backend.database import get_db
 from backend.captioning.caption_gen import generate_captions
 from mysql.connector.errors import IntegrityError
 import os
-from flask_jwt_extended import jwt_required, decode_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from backend.face_recognition.recogniser import recognise_faces
+import cv2
 
 bp = Blueprint("images", __name__, url_prefix="/")
 
@@ -17,7 +19,7 @@ def uploadImage():
     for file in files:
         processFile(current_user, file)
 
-    return {"Succ":1}
+    return "Success"
 
 def processFile(owner, file):
     hashedName = hash(file.filename + str(owner))
@@ -26,8 +28,9 @@ def processFile(owner, file):
 
     file.save(filePath)
 
-    # caption = generate_captions(filePath)
     db, conn = get_db()
+
+    # caption = generate_captions(filePath)
     try:
         db.execute("INSERT INTO images(ownerID, fileName, caption) VALUES (%s, %s, %s)", 
              (owner, str(hashedName), "LOL"))
@@ -36,6 +39,44 @@ def processFile(owner, file):
         os.remove(filePath)
     else:
         conn.commit()
+
+    db.execute("SELECT id from images where fileName=%s", [str(hashedName)])
+    imageID = db.fetchone()[0]
+
+    db.execute("SELECT faceID from user_faces WHERE userID=%s", [owner])
+    knownIDs = db.fetchall()
+    knownIDs = [x[0] for x in knownIDs]    
+    faces = recognise_faces(filePath, knownIDs)
+
+    for i in range(len(faces)):
+        face = faces[i]
+
+        faceID = -1
+        if face[0] == -1:
+            sampleName = hash(hashedName + i + 1)
+            db.execute("INSERT INTO face_description(fileName) VALUES(%s)", [str(sampleName)])
+            createSample(filePath, face[1], str(sampleName))
+            conn.commit()
+
+            db.execute("SELECT id FROM face_description WHERE fileName=%s", [str(sampleName)])
+            id = db.fetchone()[0]
+            faceID = id
+        else:
+            faceID = face[0]
+
+        if (face[0] == -1):
+            db.execute("INSERT INTO user_faces(userID, faceID) VALUES (%s, %s)", [owner, faceID])
+
+        db.execute('INSERT INTO face_images(faceID, imageID) VALUES(%s, %s)', [faceID, imageID])
+        conn.commit()
+
+
+def createSample(path, dimensions, sampleName):
+    img = cv2.imread(path)
+    (top, right, bottom, left) = dimensions
+    crop = img[top:bottom, left:right]
+
+    cv2.imwrite(current_app.config["SAMPLES_PATH"] + sampleName + ".png", crop)
 
 @bp.route("/getimage/<int:id>", methods=["GET"])
 @jwt_required()
@@ -80,7 +121,7 @@ def updateCaption(id):
     db.execute("UPDATE images SET caption=%s WHERE id=%s", [newCaption, id])
     conn.commit()
 
-    return "Successfuly update caption", 200   
+    return "Successfuly updated caption", 200   
 
 @bp.route("/getFaceImages/<int:id>", methods=["GET"])
 @jwt_required()
@@ -89,8 +130,6 @@ def getFaceImages(id):
 
     db.execute("SELECT imageID FROM face_images WHERE faceID=%s", [id])
     result = db.fetchall()
-
-    print(result)
 
     return [{"id": x[0]} for x in result]
 

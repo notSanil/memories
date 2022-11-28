@@ -22,7 +22,8 @@ CREATE TABLE images (
 
 CREATE TABLE face_description (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL DEFAULT 'Unknown'
+    name VARCHAR(50) NOT NULL DEFAULT 'Unknown',
+    fileName VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE user_faces (

@@ -14,10 +14,9 @@ def create_app(test_config=None):
         UPLOADS_PATH=app.instance_path + "/uploads/"
     )
 
-    app.config["SESSION_COOKIE_SAMESITE"] = "None"
-    app.config["SESSION_COOKIE_SECURE"] = True
     app.config["JWT_SECRET_KEY"] = 'change_me_later'
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=3)
+    app.config["SAMPLES_PATH"] = app.instance_path + '/samples/'
 
 
     if test_config is None:
@@ -32,6 +31,11 @@ def create_app(test_config=None):
 
     try:
         os.makedirs(app.instance_path + "/uploads")
+    except OSError:
+        pass
+
+    try:
+        os.makedirs(app.instance_path + "/samples")
     except OSError:
         pass
 
