@@ -9,6 +9,7 @@ import Gallery from './components/Gallery';
 import SignUp from './components/SignUp';
 import useToken from './components/Token';
 import People from './components/People';
+import PersonPage from './components/PersonPage'; 
 
 import {
   BrowserRouter as Router,
@@ -70,6 +71,7 @@ function App() {
             <Route exact path='/AboutUs' element={<AboutUs mode={mode}/>} />
             <Route exact path='/People' element={<People mode={mode} token={token}/>} />
             <Route exact path='/Gallery' element={<Gallery token={token}/>}/> 
+            <Route exact path='/Person' element={<PersonPage token={token}/>}/> 
           </Routes>
         </Router>
       )}

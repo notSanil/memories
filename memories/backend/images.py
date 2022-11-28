@@ -90,7 +90,9 @@ def getFaceImages(id):
     db.execute("SELECT imageID FROM face_images WHERE faceID=%s", [id])
     result = db.fetchall()
 
-    return result
+    print(result)
+
+    return [{"id": x[0]} for x in result]
 
 @bp.route("/getUserFaces", methods=["GET"])
 @jwt_required()
@@ -103,7 +105,5 @@ def getUserFaces():
         INNER JOIN face_description ON user_faces.faceID=face_description.id 
         WHERE user_faces.userID=%s""", [current_user])
     result = db.fetchall()
-
-    print(result)
 
     return [{"faceID": x[1], "name": x[0]} for x in result]
