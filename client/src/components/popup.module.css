@@ -8,16 +8,19 @@
   right: 0;
   background: rgba(0, 0, 0, 0.7);
   transition: opacity 500ms;
+  z-index: 1;
 }
 
 .popup {
-  margin: 70px auto;
+  margin: 20px auto;
   padding: 20px;
   background: #fff;
   border-radius: 5px;
   width: 50%;
+  height:80%;
   position: relative;
   transition: all 5s ease-in-out;
+  z-index: 2;
 }
 
 .popup h2 {
@@ -43,7 +46,7 @@
 }
 
 .popup .content {
-  max-height: 30%;
+  max-height: 90%;
   overflow: auto;
 }
 
